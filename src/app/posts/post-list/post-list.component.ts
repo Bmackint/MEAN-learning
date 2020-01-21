@@ -1,4 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+
+import { Post } from '../post.model';
+import { PostsService } from '../posts.service';
 
 @Component ({
   selector: 'app-post-list',
@@ -6,12 +10,30 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./post-list.component.css']
 })
 
-export class PostListComponent {
-  // posts = [
-  //   { title: 'first Post', content: 'This is the first post\'s content' },
-  //   { title: 'second Post', content: 'This is the second post\'s content' },
-  //   { title: 'third Post', content: 'This is the third post\'s content' },
-  // ];
+export class PostListComponent implements OnInit, OnDestroy{
 
-  @Input() posts = [];
+
+ // postsService: PostsService;
+
+  posts: Post[] = [];
+  private postsSub: Subscription;
+
+  constructor(public postsService: PostsService) {
+  //  this.postsService = postsService;
+  }
+
+  ngOnInit(): void {
+    this.postsService.getPosts();
+    this.postsSub = this.postsService.getPostUpdateListener() //postSub to prevent mem leaks on destroy
+      .subscribe((post: Post[]) => {
+        this.posts = post;
+      }); //return observable, then subscribe
+  }
+
+  ngOnDestroy() {
+    this.postsSub.unsubscribe();
+  }
+  onDelete(postId: string){
+     this.postsService.deletePost(postId);
+  }
 }

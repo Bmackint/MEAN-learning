@@ -5,9 +5,13 @@
       {{ post.title }}
     </mat-expansion-panel-header>
     <p>{{ post.content }}</p>
+    <mat-action-row>
+      <button mat-button color="accent">EDIT</button>
+      <button mat-button color="warn" (click)="onDelete(post.id)">DELETE</button>
+    </mat-action-row>
   </mat-expansion-panel>
 
 </mat-accordion>
-<p class="info-text mat-body1"> temp </p>
+
 <!-- <p *ngIf="posts.length <= 0"> no posts yet </p> syntax highlighter doesn't like '<'-->
 
