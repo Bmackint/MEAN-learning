@@ -28,6 +28,7 @@ import { PostsService } from './posts/posts.service';
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     MatInputModule,
     MatCardModule,
     MatButtonModule,
