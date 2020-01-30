@@ -14,7 +14,7 @@ export class PostListComponent implements OnInit, OnDestroy{
 
 
  // postsService: PostsService;
-
+  isLoading = false;
   posts: Post[] = [];
   private postsSub: Subscription;
 
@@ -23,9 +23,11 @@ export class PostListComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.postsService.getPosts();
     this.postsSub = this.postsService.getPostUpdateListener() //postSub to prevent mem leaks on destroy
       .subscribe((post: Post[]) => {
+        this.isLoading = false;
         this.posts = post;
       }); //return observable, then subscribe
   }
