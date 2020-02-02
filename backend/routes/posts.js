@@ -65,16 +65,28 @@ router.post("", multer({storage: storage}).single("image"), (req, res, next) => 
     });
   })
   
-  router.get('', (req, res, next) => {
-    Post.find()
-      .then(documents =>{
-        res.status(200).json({
-          message: 'get posts, success!',
-          posts: documents
-        });
+  router.get("", (req, res, next) => {
+    const pageSize = +req.query.pagesize;
+    const currentPage = +req.query.page;
+    const postQuery = Post.find(); //only executed when '.then'
+    let fetchedPosts;
+    if(pageSize && currentPage){
+      postQuery.skip(pageSize * (currentPage-1)).limit(pageSize); //note: this approach still queries whole dataset, not good for large amounts of data
+    }
+    postQuery //all posts
+      .then(documents => {
+        fetchedPosts = documents;
+        return Post.countDocuments({});
+        })
+        .then(count =>{
+          res.status(200).json({
+            message: 'get posts, success!',
+            posts: fetchedPosts,
+            maxPosts: count
+          });//chaining multiple 'then' calls
       }); //all results
-  
-  }); 
+    });
+
   
   router.get("/:id", (req, res, next) => {
     Post.findById(req.params.id).then(post =>{

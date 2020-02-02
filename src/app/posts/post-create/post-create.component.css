@@ -1,16 +1,14 @@
-
-
-textarea {
-  width: 100%;
-
-}
-
 mat-form-field {
   width: 100%
 }
 
 mat-spinner {
   margin: auto
+}
+
+textarea {
+  width: 100%;
+
 }
 
 input[type="file"] {
